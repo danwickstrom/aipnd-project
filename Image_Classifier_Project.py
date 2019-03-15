@@ -27,18 +27,19 @@
 
 
 # Imports here
-get_ipython().run_line_magic('matplotlib', 'inline')
-get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
+#get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('config', "InlineBackend.figure_format = 'retina'")
 
-import matplotlib.pyplot as plt
+#import matplotlib
 
 import torch
 from torch import nn
 from torch import optim
-import torch.nn.functional as F
+#import torch.nn.functional as F
 from torchvision import datasets, transforms, models
+import matplotlib.pyplot as plt
 batch_size = 64
-epochs = 5
+epochs = 10
 
 
 # ## Load the data
@@ -114,7 +115,11 @@ with open('cat_to_name.json', 'r') as f:
 num_classes = len(cat_to_name.keys())
 print('number of categories: {}'.format(num_classes))
 
-
+if torch.cuda.is_available():
+    mode = 'cuda'
+else:
+    mode = 'cpu'
+print('processor mode: ' + mode)    
 # # Building and training the classifier
 # 
 # Now that the data is ready, it's time to build and train the classifier. As usual, you should use one of the pretrained models from `torchvision.models` to get the image features. Build and train a new feed-forward classifier using those features.
