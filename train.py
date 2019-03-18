@@ -1,7 +1,7 @@
 
 # Imports python modules
 import torch
-from models import create_model
+from project_models import create_model
 from project_utils import get_data_loaders, save_checkpoint, detect_and_set_gpu_use
 import argparse
 import os
@@ -116,7 +116,7 @@ def get_input_args():
     Parameters:
      None - simply using argparse module to create & store command line arguments
     Returns:
-     parse_args() -data structure that stores the command line arguments object
+     parse_args() - data structure that stores the command line arguments object
     """
     # Replace None with parser.parse_args() parsed argument collection that
     # you created with this function

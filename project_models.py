@@ -73,9 +73,6 @@ def create_model(n_classes, hidden_units, name = 'vgg16', learning_rate=0.003):
         model = models.vgg16(pretrained=True)
         in_features = model.classifier[0].in_features
         hidden_unit_defaults = [4096, 1024]
-        hidden = gen_hidden_units(n_classes, in_features, hidden_unit_defaults, hidden_units)
-        freeze_updates(model, True)
-        classifier_dict = OrderedDict(hidden)
 #        classifier_dict = OrderedDict([
 #                                   ('fc1', nn.Linear(in_features, 4096, bias=True)),
 #                                   ('relu1', nn.ReLU()),
@@ -91,9 +88,6 @@ def create_model(n_classes, hidden_units, name = 'vgg16', learning_rate=0.003):
         model = models.densenet161(pretrained=True)
         in_features = model.classifier.in_features
         hidden_unit_defaults = [1024, 512]
-        hidden = gen_hidden_units(n_classes, in_features, hidden_unit_defaults, hidden_units)
-        freeze_updates(model, True)
-        classifier_dict = OrderedDict(hidden)
 #        classifier_dict = OrderedDict([
 #                                   ('fc1', nn.Linear(in_features, 1024, bias=True)),
 #                                   ('relu1', nn.ReLU()),
@@ -108,6 +102,9 @@ def create_model(n_classes, hidden_units, name = 'vgg16', learning_rate=0.003):
         raise Exception('Invalid model selected: {}'.format(name))
         
     print(f"Model architecture: {name}")
+    freeze_updates(model, True)
+    hidden = gen_hidden_units(n_classes, in_features, hidden_unit_defaults, hidden_units)
+    classifier_dict = OrderedDict(hidden)
     model.name = name        
     model.classifier = nn.Sequential(classifier_dict)
     criterion = nn.NLLLoss()    

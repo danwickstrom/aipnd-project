@@ -8,7 +8,7 @@ Created on Wed Mar 13 22:09:05 2019
 import torch
 from torch import nn
 from torch import optim
-from models import freeze_updates
+from project_models import freeze_updates
 from torchvision import datasets, transforms, models
 
 def detect_and_set_gpu_use(use_gpu):
