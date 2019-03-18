@@ -12,6 +12,14 @@ from models import freeze_updates
 from torchvision import datasets, transforms, models
 
 def detect_and_set_gpu_use(use_gpu):
+    """
+    If user requests a gpu and access is available, then the current device is 
+    set to gpu, otherwise it is set to cpu.
+        Parameters: 
+            use_gpu - boolean flag indicating user request to use gpu
+        Returns:
+            device - torch.device configured as cpu or gpu
+    """    
     if use_gpu and torch.cuda.is_available():
         device = torch.device("cuda")
         current = torch.cuda.current_device()
@@ -24,6 +32,12 @@ def detect_and_set_gpu_use(use_gpu):
 def get_data_loaders(data_dir, batch_size=64):    
     ''' Get data loaders partitioned into training, validating, and testing
         sets.
+        Parameters: 
+            data_dir - directory that contains data-sets
+            batch_size - mini-batch size used for each training iteration
+        Returns:
+            loaders - dict with data-set entries for training, validating, and testing
+            class_to_idx - mapping from class id to class index returned by top_k
     '''
 
     train_transforms = transforms.Compose([transforms.RandomRotation(30),
@@ -57,7 +71,11 @@ def get_data_loaders(data_dir, batch_size=64):
     return {'train': trainloader, 'valid': validloader, 'test': testloader}, train_data.class_to_idx
 
 def get_idx_to_class(data):
-    ''' Get mapping from idx to class index.
+    ''' Get mapping from class idx to class id.
+        Parameters: 
+            data - data-set that contains class_to_idx mapping
+        Returns:            
+            idx_to_class - mapping from class index to class id
     '''
     class_to_idx = data.class_to_idx
     idx_to_class = dict([[v,k] for k,v in class_to_idx.items()])
@@ -67,6 +85,14 @@ def get_idx_to_class(data):
 def save_checkpoint(epoch, model, optimizer, classifier_dict, filename):
     ''' saves model state as checkpoint file that can be used later to restore
         a model usefull for further training or for inference
+        Parameters: 
+            epoch - current epoch of training model
+            model - trained model
+            optimizer - current optimizer state
+            classifier_dict - dict used to create custom classifier
+            filename - file to save checkpoint
+        Returns:            
+            None 
     '''
     checkpoint = {'epoch' : epoch,
                   'name' : model.name,
@@ -82,6 +108,11 @@ def save_checkpoint(epoch, model, optimizer, classifier_dict, filename):
 def load_checkpoint(filepath):
     ''' loads checkpoint file and creates/returns initialized model that is 
         usefull for further training or for inference
+        Parameters: 
+            filename - file to save checkpoint
+        Returns:            
+            model - trained model with restored state
+            optimizer - optimizer with restored state
     '''
     model = None
     checkpoint = torch.load(filepath)

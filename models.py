@@ -12,12 +12,33 @@ from torchvision import models
 from collections import OrderedDict
 
 def freeze_updates(model, freeze):
+    """
+    Use with pre-trained models to freeze parameters so the weights are not 
+    updated through back-propagation while training.
+        Parameters: 
+            model - pre-trained model to have weights frozen
+            freeze - boolean that indiates if weights should be frozen
+        Returns:
+            None - model is mutable type which is updated in place
+    """    
     # Freeze parameters so we don't backprop through them
     for param in model.parameters():
         param.requires_grad = not freeze
 
 def create_model(n_classes, name = 'vgg16', learning_rate=0.003):
-
+    """
+    Creates pre-trained model with cusomized classfier output section
+        Parameters: 
+            n_classes - integer number of classes to be classified
+            name - name which identifies pre-trained model to be used
+            learning_rate - used to set learning rate of the optimizer
+        Returns:
+           model - pre-trained model customized classifier output stage
+           criterion - initialized criterion object to be used during training
+           optimizer - optimizer initialized to train output stage
+           classifier_dict - dictionary used to initialize the custom classifier
+                             stage
+    """    
     if name == 'vgg16':
         model = models.vgg16(pretrained=True)
         in_features = model.classifier[0].in_features
