@@ -90,14 +90,6 @@ def predict(image_path, model, topk=5):
         
         return probs, classes
 
-def cat_to_names():
-    ''' Load category to name mappings.
-    '''    
-    with open('cat_to_name.json', 'r') as f:
-        cat_to_name = json.load(f)
-        num_classes = len(cat_to_name.keys())
-        return cat_to_name, num_classes    
-    
 def get_input_args():
     """        
     This function returns these arguments as an ArgumentParser object.

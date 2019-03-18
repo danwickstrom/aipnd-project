@@ -8,6 +8,18 @@ import os
 
 
 def validate_nn(loader, model, criterion, device):
+    """
+    Validates model using validation set or test set.  Weights are fixed and do not
+    update during evaluation.
+        Parameters: 
+            loader - data-set loader for validating or testing
+            model - training model being evaluated
+            criterion - initialized criterion object used during training
+            device - torch.device configured as cpu or gpu
+        Returns:
+            test_loss - accumulated loss for test or validation set
+            accuracy - accuracy of model validation for passed in data set
+    """        
     test_loss = 0
     accuracy = 0
     model.eval()
@@ -31,6 +43,17 @@ def validate_nn(loader, model, criterion, device):
         return test_loss, accuracy
 
 def train_nn(model, epochs, criterion, optimizer, loaders, device):
+    """
+    Trains neural net pre-trained model with custom classifier configuration.
+        Parameters: 
+            loaders - dict with data-set entries for training, validating, and testing
+            model - nn model that is to be trained
+            criterion - criterion object used during training
+            optimizer - optimizer to be used during training
+            device - torch.device configured as cpu or gpu
+        Returns:
+            None
+    """        
     print(f"Training for {epochs} epochs")
     running_loss = 0
     print_every = 5
@@ -68,6 +91,25 @@ def train_nn(model, epochs, criterion, optimizer, loaders, device):
                 running_loss = 0
                 model.train()            
 
+def maybe_create_save_dir(save_dir):
+    """        
+    This function creates a directory if it doesn't exist aleready
+        Parameters:
+            save_dir - name of directory to be created 
+        Returns:
+            None
+    """
+    path = os.path.join(os.getcwd(), save_dir)
+    if not os.path.exists(path):
+        try:  
+            os.mkdir(path)
+        except OSError:  
+            print (f"Creation of the directory '{path}' failed")
+        else:  
+            print (f"Successfully created the checkpoint directory: {path} ")
+    else:
+        print (f"Using checkpoint directory: {path} ")
+
 def get_input_args():
     """        
     This function returns these arguments as an ArgumentParser object.
@@ -86,19 +128,8 @@ def get_input_args():
     parser.add_argument('--learning_rate', type=float, default='0.003', help='Model learning rate')
     parser.add_argument('--gpu', action='store_true', help='Use GPU for training')
     parser.add_argument('--epochs', type=int, default='1', help='Number of epochs to train the model')
+    parser.add_argument('--hidden_units', nargs='+', type=int, help='One or more values use to define the number of hidden units and their input/output sizes')
     return parser.parse_args()
-
-def maybe_create_save_dir(save_dir):
-    path = os.path.join(os.getcwd(), save_dir)
-    if not os.path.exists(path):
-        try:  
-            os.mkdir(path)
-        except OSError:  
-            print (f"Creation of the directory '{path}' failed")
-        else:  
-            print (f"Successfully created the checkpoint directory: {path} ")
-    else:
-        print (f"Using checkpoint directory: {path} ")
         
 if __name__ == '__main__':
     in_args = get_input_args()
@@ -112,7 +143,8 @@ if __name__ == '__main__':
                                              in_args.batch_size)
     
     # create model and move it to the selected device
-    model, criterion, optimizer, classifier_dict = create_model(len(class_to_idx), 
+    model, criterion, optimizer, classifier_dict = create_model(len(class_to_idx),
+                                                                in_args.hidden_units, 
                                                                 in_args.arch, 
                                                                 in_args.learning_rate)        
     model.to(device)
