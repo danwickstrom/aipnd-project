@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Mar 16 10:26:41 2019
+
+@author: Dan Wickstrom
+"""
 
 # Imports python modules
 import json
@@ -9,6 +15,14 @@ from project_utils import detect_and_set_gpu_use, load_checkpoint
 import argparse
 
 def imshow(image, ax=None, title=None):
+    ''' transpose, normalize, and clip image and then display it.
+        Parameters:
+            image - image in pytorch tensor format
+            ax - plot axis
+            title - title to use for the image
+        Returns:
+            returns the image axis
+   '''
     if ax is None:
         fig, ax = plt.subplots()
     
@@ -32,7 +46,13 @@ def imshow(image, ax=None, title=None):
 def process_image(img, convert=True):
     ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
         returns an Numpy array
-    '''
+        Parameters:
+            img - PIL image
+            convert - bool flag that tells routine to convert image by resizing
+                        and cropping the image
+        Returns:
+            returns the converted image as a pytorch tensor
+   '''
     # scale and crop image
     if convert:
         new_width = 224    
@@ -67,6 +87,10 @@ def process_image(img, convert=True):
 
 def get_idx_to_class(model):
     ''' Load idx_to_class mappings.
+        Parameters:
+            model - trained model to use for prediction
+        Returns:
+            returns the idx_to_class mapping for the image set
     '''    
     class_to_idx = model.class_to_idx
     idx_to_class = dict([[v,k] for k,v in class_to_idx.items()])
@@ -74,6 +98,12 @@ def get_idx_to_class(model):
 
 def predict(image_path, model, topk=5):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
+        Parameters:
+            image_path - image to use for interference
+            model - trained model to use for prediction
+            top_k - top choices for image prediction
+        Returns:
+            returns the the top_k probabilities and class ids for input image
     '''    
     idx_to_class = get_idx_to_class(model)
     image = Image.open(image_path)

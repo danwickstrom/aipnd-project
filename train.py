@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Mar 16 10:26:41 2019
+
+@author: Dan Wickstrom
+"""
 
 # Imports python modules
 import torch
