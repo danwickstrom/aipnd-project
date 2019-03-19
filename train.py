@@ -92,9 +92,9 @@ def train_nn(model, epochs, criterion, optimizer, loaders, device):
 
                 valid_loss, accuracy = validate_nn(validloader, model, criterion, device)                    
                 print(f"Step {steps}/{len(trainloader)}.. ",
-                      f"Epoch {epoch+1}/{epochs}.. "
-                      f"Train loss: {running_loss/print_every:.3f}.. "
-                      f"Valid. loss: {valid_loss/len(validloader):.3f}.. "
+                      f"Epoch {epoch+1}/{epochs}.. ",
+                      f"Train loss: {running_loss/print_every:.3f}.. ",
+                      f"Valid. loss: {valid_loss/len(validloader):.3f}.. ",
                       f"Valid. accuracy: {accuracy/len(validloader):.3f}")
 
                 running_loss = 0
@@ -118,7 +118,7 @@ def get_input_args():
     parser.add_argument('--learning_rate', type=float, default='0.003', help='Model learning rate')
     parser.add_argument('--gpu', action='store_true', help='Use GPU for training')
     parser.add_argument('--epochs', type=int, default='1', help='Number of epochs to train the model')
-    parser.add_argument('--hidden_units', nargs='+', type=int, help='One or more values use to define the number of hidden units and their input/output sizes')
+    parser.add_argument('--hidden_units', nargs='+', type=int, help='output sizes for each hidden layer - one per hidden layer')
     return parser.parse_args()
         
 if __name__ == '__main__':

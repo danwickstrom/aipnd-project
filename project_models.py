@@ -52,7 +52,6 @@ def gen_hidden_units(n_classes, in_features, defaults, args):
     output.append(("fc{}".format(i), nn.Linear(sizes[i], sizes[i+1], bias=True)))
     output.append(('output', nn.LogSoftmax(dim=1)))
             
-    #print(output)
     return output
 
 def create_model(n_classes, hidden_units, name = 'vgg16', learning_rate=0.003):
