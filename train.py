@@ -6,11 +6,14 @@ Created on Sat Mar 16 10:26:41 2019
 """
 
 # Imports python modules
-import torch
-from project_models import create_model
-from project_utils import get_data_loaders, save_checkpoint, detect_and_set_gpu_use
-import argparse
 import os
+import torch
+import argparse
+from project_models import create_model
+from project_utils import get_data_loaders 
+from project_utils import save_checkpoint
+from project_utils import detect_and_set_gpu_use
+from project_utils import maybe_create_save_dir
 
 
 def validate_nn(loader, model, criterion, device):
@@ -96,25 +99,6 @@ def train_nn(model, epochs, criterion, optimizer, loaders, device):
 
                 running_loss = 0
                 model.train()            
-
-def maybe_create_save_dir(save_dir):
-    """        
-    This function creates a directory if it doesn't exist aleready
-        Parameters:
-            save_dir - name of directory to be created 
-        Returns:
-            None
-    """
-    path = os.path.join(os.getcwd(), save_dir)
-    if not os.path.exists(path):
-        try:  
-            os.mkdir(path)
-        except OSError:  
-            print (f"Creation of the directory '{path}' failed")
-        else:  
-            print (f"Successfully created the checkpoint directory: {path} ")
-    else:
-        print (f"Using checkpoint directory: {path} ")
 
 def get_input_args():
     """        

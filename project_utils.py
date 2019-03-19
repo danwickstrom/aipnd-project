@@ -8,8 +8,41 @@ Created on Wed Mar 13 22:09:05 2019
 import torch
 from torch import nn
 from torch import optim
+import numpy as np
 from project_models import freeze_updates
 from torchvision import datasets, transforms, models
+from matplotlib import pyplot as plt
+import os
+
+
+
+def imshow(image, ax=None, title=None):
+    ''' transpose, normalize, and clip image and then display it.
+        Parameters:
+            image - image in pytorch tensor format
+            ax - plot axis
+            title - title to use for the image
+        Returns:
+            returns the image axis
+   '''
+    if ax is None:
+        fig, ax = plt.subplots()
+    
+    # PyTorch tensors assume the color channel is the first dimension
+    # but matplotlib assumes is the third dimension
+    image = image.transpose(0,1).transpose(1,2).float()
+    
+    # Undo preprocessing
+    mean = torch.tensor([0.485, 0.456, 0.406])
+    std = torch.tensor([0.229, 0.224, 0.225])
+    image = torch.clamp(std * image + mean, 0.0, 1.0)
+    
+    # Image needs to be clipped between 0 and 1 or it looks like noise when displayed
+    image = np.clip(image, 0, 1)
+    
+    ax.imshow(image)
+    
+    return ax
 
 def detect_and_set_gpu_use(use_gpu):
     """
@@ -136,4 +169,22 @@ def load_checkpoint(filepath):
         
     return model, optimizer
 
+def maybe_create_save_dir(save_dir):
+    """        
+    This function creates a directory if it doesn't exist aleready
+        Parameters:
+            save_dir - name of directory to be created 
+        Returns:
+            None
+    """
+    path = os.path.join(os.getcwd(), save_dir)
+    if not os.path.exists(path):
+        try:  
+            os.mkdir(path)
+        except OSError:  
+            print (f"Creation of the directory '{path}' failed")
+        else:  
+            print (f"Successfully created the checkpoint directory: {path} ")
+    else:
+        print (f"Using checkpoint directory: {path} ")
     

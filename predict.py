@@ -10,37 +10,8 @@ import json
 import torch
 from PIL import Image
 import numpy as np
-from matplotlib import pyplot as plt
 from project_utils import detect_and_set_gpu_use, load_checkpoint
 import argparse
-
-def imshow(image, ax=None, title=None):
-    ''' transpose, normalize, and clip image and then display it.
-        Parameters:
-            image - image in pytorch tensor format
-            ax - plot axis
-            title - title to use for the image
-        Returns:
-            returns the image axis
-   '''
-    if ax is None:
-        fig, ax = plt.subplots()
-    
-    # PyTorch tensors assume the color channel is the first dimension
-    # but matplotlib assumes is the third dimension
-    image = image.transpose(0,1).transpose(1,2).float()
-    
-    # Undo preprocessing
-    mean = torch.tensor([0.485, 0.456, 0.406])
-    std = torch.tensor([0.229, 0.224, 0.225])
-    image = torch.clamp(std * image + mean, 0.0, 1.0)
-    
-    # Image needs to be clipped between 0 and 1 or it looks like noise when displayed
-    image = np.clip(image, 0, 1)
-    
-    ax.imshow(image)
-    
-    return ax
 
 
 def process_image(img, convert=True):
